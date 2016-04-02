@@ -9,13 +9,9 @@ defmodule CjSlackBot do
     |> SlackBot.SendResponse.send
   end
 
-  def main do
+  def start(_type, _args) do
     RealSlack.start_link
 
     Input.listen_to_slack(&receiver_function/1)
-  end
-
-  def start(_type, _args) do
-    main
   end
 end
