@@ -7,6 +7,7 @@ defmodule CjSlackBot.Mixfile do
      elixir: "~> 1.2",
      build_embedded: Mix.env == :prod,
      start_permanent: Mix.env == :prod,
+     escript: [main_module: CjSlackBot],
      deps: deps]
   end
 

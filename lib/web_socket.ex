@@ -5,14 +5,13 @@ defmodule WebSocket do
     Socket.Web.connect!(host, path: uri.path, secure: true)
   end
 
-  def listen(socket, responder_pid) do
+  def listen(socket, callback_function) do
     case socket |> Socket.Web.recv! do
       {:text, data} ->
-        IO.puts("received #{inspect data}")
-        send(responder_pid, {:event, Poison.Parser.parse!(data)})
+        Task.start(fn -> callback_function.(data) end)
       {:ping, _ } ->
         socket |> Socket.Web.send!({:pong, ""})
     end
-    listen(socket, responder_pid)
+    listen(socket, callback_function)
   end
 end
