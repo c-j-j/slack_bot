@@ -1,32 +1,39 @@
 defmodule RealSlack do
-  use GenServer
 
   def start_link do
     slack_response = Slack.rtm_start
     socket = WebSocket.connect!(slack_response["url"])
-    GenServer.start_link(__MODULE__, socket, name: __MODULE__)
+    Agent.start_link(fn -> socket end, name: __MODULE__)
   end
 
   def next_message do
-    GenServer.call(__MODULE__, :next_message, :infinity)
+    IO.puts("awaiting next message")
+    Agent.get(__MODULE__, &(&1)) |> next_message
   end
 
-  def send_response(text) do
-    GenServer.cast(__MODULE__, {:send_message, text})
+  def send_message(text) do
+    Agent.get(__MODULE__, fn(socket) -> send_message(socket, text) end)
   end
 
-  def handle_call(:next_message, _from, socket) do
-    case socket |> Socket.Web.recv! do
+  defp next_message(socket) do
+    case socket |> receive_from_slack do
       {:text, data} ->
-        {:reply, data, socket}
+        data
       {:ping, _ } ->
-        socket |> Socket.Web.send!({:pong, ""})
-        handle_call(:next_message, _from, socket)
+        socket |> send_to_slack({:pong, ""})
+        next_message(socket)
     end
   end
 
-  def handle_cast({:send_message, text}, socket) do
-    socket |> Socket.Web.send!({:text, text})
-    {:noreply, socket}
+  defp send_message(socket, text) do
+    socket |> send_to_slack({:text, text})
+  end
+
+  defp receive_from_slack(socket) do
+    socket |> Socket.Web.recv!
+  end
+
+  defp send_to_slack(socket, message) do
+    socket |> Socket.Web.send!(message)
   end
 end

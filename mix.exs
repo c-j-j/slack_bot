@@ -7,7 +7,6 @@ defmodule CjSlackBot.Mixfile do
      elixir: "~> 1.2",
      build_embedded: Mix.env == :prod,
      start_permanent: Mix.env == :prod,
-     escript: [main_module: CjSlackBot],
      deps: deps]
   end
 
@@ -15,7 +14,8 @@ defmodule CjSlackBot.Mixfile do
   #
   # Type "mix help compile.app" for more information
   def application do
-    [applications: [:logger, :httpoison]]
+    [ mod: {CjSlackBot, []},
+      applications: [:logger, :httpoison]]
   end
 
   # Dependencies can be Hex packages:
