@@ -1,8 +1,8 @@
-defmodule CjSlackBot.Mixfile do
+defmodule SlackBot.Mixfile do
   use Mix.Project
 
   def project do
-    [app: :cj_slack_bot,
+    [app: :slack_bot,
      version: "0.0.1",
      elixir: "~> 1.2",
      build_embedded: Mix.env == :prod,
@@ -14,7 +14,7 @@ defmodule CjSlackBot.Mixfile do
   #
   # Type "mix help compile.app" for more information
   def application do
-    [ mod: {CjSlackBot, []},
+    [ mod: {SlackBot, []},
       applications: [:logger, :httpoison]]
   end
 

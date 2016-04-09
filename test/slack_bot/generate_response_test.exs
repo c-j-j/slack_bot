@@ -14,7 +14,7 @@ defmodule SlackBot.GenerateResponseTest do
   end
 
   test 'does not generate response for messages from itself' do
-    message = %SlackBot.Message{user: 'U0QD6LCF8'}
+    message = %SlackBot.Message{user: "U0QD6LCF8"}
 
     response = SlackBot.GenerateResponse.generate({:message, message})
 
