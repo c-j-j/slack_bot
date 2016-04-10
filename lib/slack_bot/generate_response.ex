@@ -1,7 +1,6 @@
 defmodule SlackBot.GenerateResponse do
   def generate({:message, message}) do
 
-    IO.inspect(message)
     if message.text == "error" do
       IO.puts("raising error")
       raise "AHHHHHHHHHHHHHH"
