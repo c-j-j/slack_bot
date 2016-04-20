@@ -8,7 +8,6 @@ defmodule SlackBot.Supervisor do
   end
 
   def start_children(sup_pid) do
-    {:ok, _pid_slack} = Supervisor.start_child(sup_pid, worker(SlackBot.OutputQueue, []))
     {:ok, _pid_slack} = Supervisor.start_child(sup_pid, worker(SlackBot.Sender, []))
     {:ok, _pid_slack} = Supervisor.start_child(sup_pid, worker(SlackBot.Socket, []))
     {:ok, _pid_input} = Supervisor.start_child(sup_pid, worker(SlackBot.Receiver, []))

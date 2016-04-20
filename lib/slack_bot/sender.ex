@@ -1,24 +1,19 @@
 defmodule SlackBot.Sender do
   def start_link do
-   Task.start_link(fn -> execute() end)
+    pid = spawn_link(__MODULE__, :send_outgoing_messages, [])
+    Process.register(pid, :sender)
+    {:ok, pid}
   end
 
-  def execute do
-    next_message = SlackBot.OutputQueue.dequeue
+  def send_message(message) do
+    send(:sender, message)
+  end
 
-    if next_message != nil do
-      send(next_message)
+  def send_outgoing_messages do
+    receive do
+      {:response, message} -> SlackBot.Socket.send_message(message)
     end
 
-    throttle()
-    execute()
-  end
-
-  defp throttle do
-    :timer.sleep(20)
-  end
-
-  defp send(message) when message != nil do
-    SlackBot.SendResponse.send(message)
+    send_outgoing_messages()
   end
 end

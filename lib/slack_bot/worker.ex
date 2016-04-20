@@ -3,6 +3,6 @@ defmodule SlackBot.Worker do
     input
     |> SlackBot.Transform.transform
     |> SlackBot.GenerateResponse.generate
-    |> SlackBot.OutputQueue.enqueue
+    |> SlackBot.Sender.send_message
   end
 end
