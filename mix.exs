@@ -12,12 +12,15 @@ defmodule SlackBot.Mixfile do
   end
 
   # Configuration for the OTP application
-  #
   # Type "mix help compile.app" for more information
   def application do
     [ mod: {SlackBot, []},
       applications: [:logger, :httpoison]]
   end
+
+  use Mix.Config
+  import_config "config/config.exs"
+
 
   # Dependencies can be Hex packages:
   #
