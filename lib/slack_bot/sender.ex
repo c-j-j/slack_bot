@@ -5,13 +5,16 @@ defmodule SlackBot.Sender do
     {:ok, pid}
   end
 
+  def send_message({:ignore}) do
+  end
+
   def send_message(message) do
     send(:sender, message)
   end
 
   def send_outgoing_messages do
     receive do
-      {:response, message} -> SlackBot.Socket.send_message(message)
+      {:response, message} -> SlackBot.OutputSocket.send_message(message)
     end
 
     send_outgoing_messages()
